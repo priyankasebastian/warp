@@ -1,3 +1,9 @@
+# 1.4.6
+2021-06-17 
+
+* Added an optional step to reblock gVCFs, this step is included by default
+    * The ExternalWholeGenomeReprocessing pipeline now outputs reblocked gVCFs by default. To skip reblocking, add '"ExternalWholeGenomeReprocessing.WholeGenomeReprocessing.WholeGenomeGermlineSingleSample.BamToGvcf.make_gvcf": false' to the inputs
+
 # 1.3.6
 2021-06-01 
 

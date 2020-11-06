@@ -1,23 +1,29 @@
 version 1.0
 
+import "../../../../../../tasks/broad/GermlineVariantDiscovery.wdl" as Calling
+
 workflow ReblockGVCF {
 
-  String pipeline_version = "1.1.0"
+  String pipeline_version = "1.1.1"
 
   input {
     File gvcf
     File gvcf_index
-    String docker_image = "us.gcr.io/broad-gatk/gatk:4.1.8.0"
+    File ref_dict
+    File ref_fasta
+    File ref_fasta_index
   }
 
   String gvcf_basename = basename(gvcf, ".g.vcf.gz")
 
-  call Reblock {
+  call Calling.Reblock as Reblock {
     input:
       gvcf = gvcf,
       gvcf_index = gvcf_index,
-      output_vcf_filename = gvcf_basename + ".reblocked.g.vcf.gz",
-      docker_image = docker_image
+      ref_fasta = ref_fasta,
+      ref_fasta_index = ref_fasta_index,
+      ref_dict = ref_dict,
+      output_vcf_filename = gvcf_basename + ".reblocked.g.vcf.gz"
   }
 
   output {
@@ -28,38 +34,3 @@ workflow ReblockGVCF {
     allowNestedInputs: true
   }
 }
-
-task Reblock {
-
-  input {
-    File gvcf
-    File gvcf_index
-    String output_vcf_filename
-    String docker_image
-  }
-
-  Int disk_size = ceil(size(gvcf, "GiB")) * 2
-
-  command {
-    gatk --java-options "-Xms3g -Xmx3g" \
-      ReblockGVCF \
-      -V ~{gvcf} \
-      -drop-low-quals \
-      -do-qual-approx \
-      --floor-blocks -GQB 10 -GQB 20 -GQB 30 -GQB 40 -GQB 50 -GQB 60 \
-      -O ~{output_vcf_filename}
-  }
-
-  runtime {
-    memory: "3.75 GB"
-    bootDiskSizeGb: "15"
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 3
-    docker: docker_image
-  }
-
-  output {
-    File output_vcf = output_vcf_filename
-    File output_vcf_index = output_vcf_filename + ".tbi"
-  }
-} 
