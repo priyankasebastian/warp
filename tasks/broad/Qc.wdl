@@ -585,8 +585,9 @@ task ValidateVCF {
     File dbsnp_vcf
     File dbsnp_vcf_index
     File calling_interval_list
-    Int preemptible_tries
+    Int preemptible_tries = 3
     Boolean is_gvcf = true
+    String? extra_args
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.8.0"
   }
 
@@ -601,7 +602,8 @@ task ValidateVCF {
       -L ~{calling_interval_list} \
       ~{true="-gvcf" false="" is_gvcf} \
       --validation-type-to-exclude ALLELES \
-      --dbsnp ~{dbsnp_vcf}
+      --dbsnp ~{dbsnp_vcf} \
+      ~{extra_args}
   }
   runtime {
     docker: gatk_docker

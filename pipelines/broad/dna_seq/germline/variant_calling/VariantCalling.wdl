@@ -145,6 +145,8 @@ workflow VariantCalling {
       ref_dict = ref_dict,
       calling_interval_list = calling_interval_list,
       is_gvcf = make_gvcf,
+      extra_args = "--no-overlaps",
+      gatk_docker = "us.gcr.io/broad-dsde-methods/validate_reblocking@sha256:ede2cae0d345c6ad2690db99d1d6485adc2b52f98deb5e821bd64baf3df63602",
       preemptible_tries = agg_preemptible_tries
   }
 
