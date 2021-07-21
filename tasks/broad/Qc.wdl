@@ -582,8 +582,8 @@ task ValidateVCF {
     File ref_fasta
     File ref_fasta_index
     File ref_dict
-    File dbsnp_vcf
-    File dbsnp_vcf_index
+    File? dbsnp_vcf
+    File? dbsnp_vcf_index
     File calling_interval_list
     Int preemptible_tries = 3
     Boolean is_gvcf = true
@@ -602,7 +602,7 @@ task ValidateVCF {
       -L ~{calling_interval_list} \
       ~{true="-gvcf" false="" is_gvcf} \
       --validation-type-to-exclude ALLELES \
-      --dbsnp ~{dbsnp_vcf} \
+      ~{"--dbsnp" + dbsnp_vcf} \
       ~{extra_args}
   }
   runtime {

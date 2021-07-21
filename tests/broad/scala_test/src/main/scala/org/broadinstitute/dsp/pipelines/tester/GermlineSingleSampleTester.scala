@@ -87,7 +87,7 @@ class GermlineSingleSampleTester(testerConfig: GermlineCloudWorkflowConfig)(
       truthCram = truthCloudPath.resolve(s"$outputBaseName.cram"),
       truthCrai = truthCloudPath.resolve(s"$outputBaseName.cram.crai"),
       testGvcf = resultsCloudPath.resolve(s"$gvcfBaseName.reblocked.g.vcf.gz"),
-      truthGvcf = truthCloudPath.resolve(s"$gvcfBaseName.reblocked.g.vcf.gz")
+      truthGvcf = truthCloudPath.resolve(s"$gvcfBaseName.g.vcf.gz")  //TODO: UPDATE ME!!
     )
     GermlineSingleSampleValidationInputs
       .marshall(validationInputs)

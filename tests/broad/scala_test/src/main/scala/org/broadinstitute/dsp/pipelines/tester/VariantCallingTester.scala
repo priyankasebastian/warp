@@ -69,7 +69,7 @@ class VariantCallingTester(testerConfig: GermlineCloudWorkflowConfig)(
 
     val validationInputs = VariantCallingValidationInputs(
       testGvcf = resultsCloudPath.resolve(s"$gvcfBasename.reblocked.g.vcf.gz"),
-      truthGvcf = truthCloudPath.resolve(s"$gvcfBasename.reblocked.g.vcf.gz"),
+      truthGvcf = truthCloudPath.resolve(s"$gvcfBasename.g.vcf.gz"),  //TODO: UPDATE ME!!
     )
     VariantCallingValidationInputs
       .marshall(validationInputs)
