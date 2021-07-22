@@ -1,8 +1,14 @@
-# 2.5.4
-2021-06-17 
+# 2.5.0
+2021-07-22 
 
 * Added an optional step to reblock gVCFs, this step is included by default
     * The ExomeGermlineSingleSample pipeline now outputs reblocked gVCFs by default. To skip reblocking, add '"ExomeGermlineSingleSample.BamToGvcf.make_gvcf": false' to the inputs
+
+# 2.4.5
+2021-06-22
+
+* Removed duplicate MarkDuplicatesSpark task from BamProcessing
+* Removed duplicate Docker image from CheckPreValidation task in QC
 
 # 2.4.4
 2021-06-01 
