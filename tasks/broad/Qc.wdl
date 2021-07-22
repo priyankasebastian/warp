@@ -601,7 +601,7 @@ task ValidateVCF {
       -L ~{calling_interval_list} \
       ~{true="-gvcf" false="" is_gvcf} \
       --validation-type-to-exclude ALLELES \
-      ~{"--dbsnp" + dbsnp_vcf} \
+      ~{"--dbsnp " + dbsnp_vcf} \
       ~{extra_args}
   }
   runtime {
