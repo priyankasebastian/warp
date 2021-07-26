@@ -586,7 +586,7 @@ task ValidateVCF {
     File calling_interval_list
     Int preemptible_tries = 3
     Boolean is_gvcf = true
-    String? extra_args
+    String? extra_args = " --no-overlaps"
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.8.0"
   }
 
