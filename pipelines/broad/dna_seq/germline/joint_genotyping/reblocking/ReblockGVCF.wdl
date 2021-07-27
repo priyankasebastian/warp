@@ -36,6 +36,7 @@ workflow ReblockGVCF {
         ref_fasta_index = ref_fasta_index,
         ref_dict = ref_dict,
         calling_interval_list = gvcf, #nice trick so we don't have to pass around intervals; shouldn't be too much slower
+        calling_interval_list_index = gvcf_index,
         is_gvcf = true,
         extra_args = "--no-overlaps",
         gatk_docker = "us.gcr.io/broad-dsde-methods/validate_reblocking@sha256:ede2cae0d345c6ad2690db99d1d6485adc2b52f98deb5e821bd64baf3df63602"

@@ -584,6 +584,7 @@ task ValidateVCF {
     File? dbsnp_vcf
     File? dbsnp_vcf_index
     File calling_interval_list
+    File? calling_interval_list_index  # if the interval list is a VCF, than an index file is also required
     Int preemptible_tries = 3
     Boolean is_gvcf = true
     String? extra_args
