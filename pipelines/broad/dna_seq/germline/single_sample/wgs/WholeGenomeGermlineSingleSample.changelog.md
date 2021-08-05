@@ -1,8 +1,13 @@
 # 2.4.0
-2021-07-21 
+2021-08-05
 
 * Added an optional step to reblock gVCFs, this step is included by default
     * The WholeGenomeGermlineSingleSample pipeline now outputs reblocked gVCFs by default. To skip reblocking, add '"WholeGenomeGermlineSingleSample.BamToGvcf.make_gvcf": false' to the inputs
+
+# 2.3.6
+2021-08-02
+
+* Increased the version number to make new release tag for Dockstore 
 
 # 2.3.5
 2021-06-22
