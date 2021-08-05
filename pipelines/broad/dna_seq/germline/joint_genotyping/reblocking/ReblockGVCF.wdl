@@ -24,7 +24,7 @@ workflow ReblockGVCF {
       ref_fasta = ref_fasta,
       ref_fasta_index = ref_fasta_index,
       ref_dict = ref_dict,
-      output_vcf_filename = gvcf_basename + ".reblocked.g.vcf.gz"
+      output_vcf_filename = gvcf_basename + ".rb.g.vcf.gz"
   }
 
     # Validate the (g)VCF output of HaplotypeCaller
