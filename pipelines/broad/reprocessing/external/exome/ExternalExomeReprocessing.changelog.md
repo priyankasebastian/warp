@@ -1,8 +1,13 @@
 # 2.5.0
-2021-07-22 
+2021-08-05
 
 * Added an optional step to reblock gVCFs, this step is included by default
     * The ExternalExomeReprocessing pipeline now outputs reblocked gVCFs by default. To skip reblocking, add '"ExternalExomeReprocessing.ExomeReprocessing.ExomeGermlineSingleSample.BamToGvcf.make_gvcf": false' to the inputs
+
+# 2.4.8
+2021-08-02
+
+* Increased the version number to make new release tag for Dockstore 
 
 # 2.4.7
 2021-06-22
