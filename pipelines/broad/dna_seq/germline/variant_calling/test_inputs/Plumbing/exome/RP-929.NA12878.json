@@ -9,7 +9,7 @@
   "VariantCalling.ref_dict": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dict",
   "VariantCalling.dbsnp_vcf": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf",
   "VariantCalling.dbsnp_vcf_index": "gs://gcp-public-data--broad-references/hg38/v0/Homo_sapiens_assembly38.dbsnp138.vcf.idx",
-  "VariantCalling.calling_interval_list": "gs://broad-dsde-methods-gauthier/exome_calling_regions.v1.1.interval_list",
+  "VariantCalling.calling_interval_list": "gs://gcp-public-data--broad-references/hg38/v0/exome_calling_regions.v1.interval_list",
   "VariantCalling.evaluation_interval_list": "gs://gcp-public-data--broad-references/hg38/v0/exome_evaluation_regions.v1.interval_list",
 
   "VariantCalling.contamination": 0.283372,
