@@ -595,7 +595,7 @@ task ValidateVCF {
   Int disk_size = ceil(size(input_vcf, "GiB") + size(dbsnp_vcf, "GiB") + ref_size) + 20
 
   command {
-    gatk --java-options -Xms6000m \
+    gatk --java-options -Xms6000m \  #Note that WGS needs a lot of memory to do the -L *.vcf if an interval file is not supplied
       ValidateVariants \
       -V ~{input_vcf} \
       -R ~{ref_fasta} \

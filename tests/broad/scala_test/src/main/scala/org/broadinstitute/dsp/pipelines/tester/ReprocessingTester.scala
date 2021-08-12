@@ -72,7 +72,7 @@ class ReprocessingTester(testerConfig: GermlineCloudWorkflowConfig)(
         truthCram = truthCloudPath.resolve(s"$outputBaseName.cram"),
         truthCrai = truthCloudPath.resolve(s"$outputBaseName.cram.crai"),
         testGvcf = resultsCloudPath.resolve(s"$gvcfBaseName.rb.g.vcf.gz"),
-        truthGvcf = truthCloudPath.resolve(s"$gvcfBaseName.g.vcf.gz")
+        truthGvcf = truthCloudPath.resolve(s"$gvcfBaseName.rb.g.vcf.gz")
       ),
       validationWorkflowName
     )

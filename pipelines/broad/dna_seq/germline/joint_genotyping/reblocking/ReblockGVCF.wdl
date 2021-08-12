@@ -10,6 +10,7 @@ workflow ReblockGVCF {
   input {
     File gvcf
     File gvcf_index
+    File? calling_interval_list
     File ref_dict
     File ref_fasta
     File ref_fasta_index
@@ -35,7 +36,7 @@ workflow ReblockGVCF {
         ref_fasta = ref_fasta,
         ref_fasta_index = ref_fasta_index,
         ref_dict = ref_dict,
-        calling_interval_list = gvcf, #nice trick so we don't have to pass around intervals; shouldn't be too much slower
+        calling_interval_list = select_first([calling_interval_list, gvcf]), #nice trick so we don't have to pass around intervals; shouldn't be too much slower
         calling_interval_list_index = gvcf_index,
         is_gvcf = true,
         extra_args = "--no-overlaps",
