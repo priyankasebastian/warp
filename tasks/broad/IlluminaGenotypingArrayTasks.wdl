@@ -537,8 +537,9 @@ task AutoCall {
       ~{cluster_file} \
       . \
       -f ~{chip_well_barcode} \
-      ~{default='' true='--gender-estimate-call-rate-threshold -0.1' false='' is_gender_autocall} \
-      -g
+      ~{default='' true='--gender-estimate-call-rate-threshold -0.1' false='--gender-estimate-call-rate-threshold 0.9' is_gender_autocall} \
+      -g \
+      -i 1
   >>>
 
   runtime {
