@@ -30,7 +30,7 @@ task SamToFastqAndBwaMemAndMba {
     ReferenceFasta reference_fasta
 
     Int compression_level
-    Int preemptible_tries
+    #Int preemptible_tries
     Boolean hard_clip_reads = false
   }
 
@@ -47,7 +47,7 @@ task SamToFastqAndBwaMemAndMba {
 
     # This is done before "set -o pipefail" because "bwa" will have a rc=1 and we don't want to allow rc=1 to succeed
     # because the sed may also fail with that error and that is something we actually want to fail on.
-    BWA_VERSION=$(/usr/gitc/bwa 2>&1 | \
+    BWA_VERSION=$(/mnt/lustre/genomics/tools/bwa-0.7.17/bwa 2>&1 | \
     grep -e '^Version' | \
     sed 's/Version: //')
 
@@ -62,14 +62,14 @@ task SamToFastqAndBwaMemAndMba {
     bash_ref_fasta=~{reference_fasta.ref_fasta}
     # if reference_fasta.ref_alt has data in it,
     if [ -s ~{reference_fasta.ref_alt} ]; then
-      java -Xms1000m -Xmx1000m -jar /usr/gitc/picard.jar \
+      java -Xms1000m -Xmx1000m -jar /mnt/lustre/genomics/tools/picard.jar \
         SamToFastq \
         INPUT=~{input_bam} \
         FASTQ=/dev/stdout \
         INTERLEAVE=true \
         NON_PF=true | \
-      /usr/gitc/~{bwa_commandline} /dev/stdin - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2) | \
-      java -Dsamjdk.compression_level=~{compression_level} -Xms1000m -Xmx1000m -jar /usr/gitc/picard.jar \
+      /mnt/lustre/genomics/tools/bwa-0.7.17/~{bwa_commandline} /dev/stdin - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2) | \
+      java -Dsamjdk.compression_level=~{compression_level} -Xms1000m -Xmx1000m -jar /mnt/lustre/genomics/tools/picard.jar \
         MergeBamAlignment \
         VALIDATION_STRINGENCY=SILENT \
         EXPECTED_ORIENTATIONS=FR \
@@ -109,11 +109,12 @@ task SamToFastqAndBwaMemAndMba {
     fi
   >>>
   runtime {
-    docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.7-1603303710"
-    preemptible: preemptible_tries
+    #docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.7-1603303710"
+    #preemptible: preemptible_tries
     memory: "14 GiB"
-    cpu: "16"
-    disks: "local-disk " + disk_size + " HDD"
+    cpu: "8"
+    backend: "SLURM-BWA"
+    #disks: "local-disk " + disk_size + " HDD"
   }
   output {
     File output_bam = "~{output_bam_basename}.bam"
@@ -125,7 +126,7 @@ task SamSplitter {
   input {
     File input_bam
     Int n_reads
-    Int preemptible_tries
+    #Int preemptible_tries
     Int compression_level
   }
 
@@ -138,9 +139,9 @@ task SamSplitter {
     set -e
     mkdir output_dir
 
-    total_reads=$(samtools view -c ~{input_bam})
+    total_reads=$(/mnt/lustre/genomics/tools/samtools-1.9/samtools view -c ~{input_bam})
 
-    java -Dsamjdk.compression_level=~{compression_level} -Xms3000m -jar /usr/gitc/picard.jar SplitSamByNumberOfReads \
+    java -Dsamjdk.compression_level=~{compression_level} -Xms3000m -Xmx3600m -jar /mnt/lustre/genomics/tools/picard.jar SplitSamByNumberOfReads \
       INPUT=~{input_bam} \
       OUTPUT=output_dir \
       SPLIT_TO_N_READS=~{n_reads} \
@@ -150,9 +151,9 @@ task SamSplitter {
     Array[File] split_bams = glob("output_dir/*.bam")
   }
   runtime {
-    docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.7-1603303710"
-    preemptible: preemptible_tries
+    #docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.7-1603303710"
+    #preemptible: preemptible_tries
     memory: "3.75 GiB"
-    disks: "local-disk " + disk_size + " HDD"
+    #disks: "local-disk " + disk_size + " HDD"
   }
 }
