@@ -72,8 +72,8 @@ task CalculateSomaticContamination {
         bootDiskSizeGb: 12
         memory: command_mem + " MB"
         maxRetries: select_first([max_retries, 2])
-        disks: "local-disk " + disk_size + " HDD"
-        preemptible: select_first([preemptible_attempts, 3])
+        #disks: "local-disk " + disk_size + " HDD"
+        #preemptible: select_first([preemptible_attempts, 3])
     }
 
     output {

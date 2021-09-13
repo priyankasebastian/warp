@@ -29,8 +29,8 @@ task CheckSamplesUnique {
 
   runtime {
     memory: "1 GiB"
-    preemptible: 1
-    disks: "local-disk 10 HDD"
+    #preemptible: 1
+    #disks: "local-disk 10 HDD"
     docker: "us.gcr.io/broad-gotc-prod/python:2.7"
   }
 }
@@ -63,9 +63,9 @@ task SplitIntervalList {
 
   runtime {
     memory: "3.75 GiB"
-    preemptible: 1
+    #preemptible: 1
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
+    #disks: "local-disk " + disk_size + " HDD"
     docker: gatk_docker
   }
 
@@ -122,9 +122,9 @@ task ImportGVCFs {
     memory: "26 GiB"
     cpu: 4
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
+    #disks: "local-disk " + disk_size + " HDD"
     docker: gatk_docker
-    preemptible: 1
+    #preemptible: 1
   }
 
   output {
@@ -181,8 +181,8 @@ task GenotypeGVCFs {
     memory: "26 GiB"
     cpu: 2
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -237,8 +237,8 @@ task GnarlyGenotyper {
     memory: "26 GiB"
     cpu: 2
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -284,8 +284,8 @@ task HardFilterAndMakeSitesOnlyVcf {
     memory: "3.75 GiB"
     cpu: "1"
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -345,8 +345,8 @@ task IndelsVariantRecalibrator {
     memory: "26 GiB"
     cpu: "2"
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -412,8 +412,8 @@ task SNPsVariantRecalibratorCreateModel {
     memory: "104 GiB"
     cpu: "2"
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -491,8 +491,8 @@ task SNPsVariantRecalibrator {
     memory: "~{machine_mem} GiB"
     cpu: 2
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -557,8 +557,8 @@ task GatherTranches {
     memory: "7.5 GiB"
     cpu: "2"
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -616,8 +616,8 @@ task ApplyRecalibration {
     memory: "7 GiB"
     cpu: "1"
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -662,8 +662,8 @@ task GatherVcfs {
     memory: "7 GiB"
     cpu: "1"
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -710,8 +710,8 @@ task SelectFingerprintSiteVariants {
     memory: "7.5 GiB"
     cpu: 1
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -757,8 +757,8 @@ task CollectVariantCallingMetrics {
     memory: "7.5 GiB"
     cpu: 2
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 }
@@ -830,8 +830,8 @@ task GatherVariantCallingMetrics {
     memory: "3 GiB"
     cpu: "1"
     bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
     docker: gatk_docker
   }
 
@@ -919,8 +919,8 @@ task CrossCheckFingerprint {
 
   runtime {
     memory: memMb + " MiB"
-    disks: "local-disk " + disk + " HDD"
-    preemptible: 0
+    #disks: "local-disk " + disk + " HDD"
+    #preemptible: 0
     docker: gatk_docker
   }
 
@@ -957,8 +957,8 @@ task GatherPicardMetrics {
   runtime {
     cpu: 1
     memory: "3.75 GiB"
-    preemptible: 1
-    disks: "local-disk " + disk_size + " HDD"
+    #preemptible: 1
+    #disks: "local-disk " + disk_size + " HDD"
     docker: "us.gcr.io/broad-gotc-prod/python:2.7"
   }
 }
@@ -1034,9 +1034,9 @@ task GetFingerprintingIntervalIndices {
   runtime {
     cpu: 2
     memory: "3.75 GiB"
-    preemptible: 1
+    #preemptible: 1
     bootDiskSizeGb: 15
-    disks: "local-disk 10 HDD"
+    #disks: "local-disk 10 HDD"
     docker: gatk_docker
   }
 }
@@ -1063,8 +1063,8 @@ task PartitionSampleNameMap {
 
   runtime {
     memory: "1 GiB"
-    preemptible: 1
-    disks: "local-disk 10 HDD"
+    #preemptible: 1
+    #disks: "local-disk 10 HDD"
     docker: "us.gcr.io/broad-gotc-prod/python:2.7"
   }
 }
