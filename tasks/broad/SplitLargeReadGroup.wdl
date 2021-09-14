@@ -5,14 +5,11 @@ version 1.0
 ## This WDL pipeline implements a split of large readgroups for human whole-genome and exome sequencing data.
 ##
 ## Runtime parameters are often optimized for Broad's Google Cloud Platform implementation.
-## For program versions, see docker containers.
 ##
 ## LICENSING :
 ## This script is released under the WDL source code license (BSD-3) (see LICENSE in
 ## https://github.com/broadinstitute/wdl). Note however that the programs it calls may
 ## be subject to different licenses. Users are responsible for checking that they are
-## authorized to run all programs before running this script. Please see the docker
-## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
 import "../../tasks/broad/Alignment.wdl" as Alignment
@@ -34,7 +31,6 @@ workflow SplitLargeReadGroup {
     ReferenceFasta reference_fasta
 
     Int compression_level
-    Int preemptible_tries
     Int reads_per_file = 48000000
     Boolean hard_clip_reads = false
   }
@@ -43,7 +39,6 @@ workflow SplitLargeReadGroup {
     input :
       input_bam = input_bam,
       n_reads = reads_per_file,
-      preemptible_tries = preemptible_tries,
       compression_level = compression_level
   }
 
@@ -58,7 +53,6 @@ workflow SplitLargeReadGroup {
         output_bam_basename = current_name,
         reference_fasta = reference_fasta,
         compression_level = compression_level,
-        preemptible_tries = preemptible_tries,
         hard_clip_reads = hard_clip_reads
     }
 
@@ -68,7 +62,6 @@ workflow SplitLargeReadGroup {
   call Utils.SumFloats as SumSplitAlignedSizes {
     input:
       sizes = current_mapped_size,
-      preemptible_tries = preemptible_tries
   }
 
   call Processing.GatherUnsortedBamFiles as GatherMonolithicBamFile {
@@ -76,7 +69,6 @@ workflow SplitLargeReadGroup {
       input_bams = SamToFastqAndBwaMemAndMba.output_bam,
       total_input_size = SumSplitAlignedSizes.total_size,
       output_bam_basename = output_bam_basename,
-      preemptible_tries = preemptible_tries,
       compression_level = compression_level
   }
   output {

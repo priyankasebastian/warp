@@ -5,14 +5,11 @@ version 1.0
 ## for human whole-genome and exome sequencing data.
 ##
 ## Runtime parameters are often optimized for Broad's Google Cloud Platform implementation.
-## For program versions, see docker containers.
 ##
 ## LICENSING :
 ## This script is released under the WDL source code license (BSD-3) (see LICENSE in
 ## https://github.com/broadinstitute/wdl). Note however that the programs it calls may
 ## be subject to different licenses. Users are responsible for checking that they are
-## authorized to run all programs before running this script. Please see the docker
-## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
 import "../../tasks/broad/Qc.wdl" as QC
@@ -42,7 +39,6 @@ input {
       ref_dict = references.reference_fasta.ref_dict,
       ref_fasta = references.reference_fasta.ref_fasta,
       ref_fasta_index = references.reference_fasta.ref_fasta_index,
-      preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
   # QC the final BAM some more (no such thing as too much QC)
@@ -54,7 +50,6 @@ input {
       ref_dict = references.reference_fasta.ref_dict,
       ref_fasta = references.reference_fasta.ref_fasta,
       ref_fasta_index = references.reference_fasta.ref_fasta_index,
-      preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
   if (defined(haplotype_database_file) && defined(fingerprint_genotypes_file)) {
@@ -68,7 +63,6 @@ input {
         genotypes_index = fingerprint_genotypes_index,
         output_basename = base_name,
         sample = sample_name,
-        preemptible_tries = papi_settings.agg_preemptible_tries
     }
   }
 
@@ -78,7 +72,6 @@ input {
       input_bam = base_recalibrated_bam,
       input_bam_index = base_recalibrated_bam_index,
       read_group_md5_filename = recalibrated_bam_base_name + ".bam.read_group_md5",
-      preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
   output {
