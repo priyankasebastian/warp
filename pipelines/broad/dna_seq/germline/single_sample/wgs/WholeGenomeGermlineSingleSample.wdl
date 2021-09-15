@@ -18,14 +18,11 @@ version 1.0
 ## - Reference genome must be Hg38 with ALT contigs
 ##
 ## Runtime parameters are optimized for Broad's Google Cloud Platform implementation.
-## For program versions, see docker containers.
 ##
 ## LICENSING :
 ## This script is released under the WDL source code license (BSD-3) (see LICENSE in
 ## https://github.com/broadinstitute/wdl). Note however that the programs it calls may
 ## be subject to different licenses. Users are responsible for checking that they are
-## authorized to run all programs before running this script. Please see the docker
-## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
 import "../../../../../../tasks/broad/UnmappedBamToAlignedBam.wdl" as ToBam
@@ -41,6 +38,7 @@ workflow WholeGenomeGermlineSingleSample {
   String pipeline_version = "2.3.3"
 
   input {
+         String tool_path = "/mnt/lustre/genomics/tools"
     SampleAndUnmappedBams sample_and_unmapped_bams
     DNASeqSingleSampleReferences references
     VariantCallingScatterSettings scatter_settings
@@ -52,7 +50,7 @@ workflow WholeGenomeGermlineSingleSample {
     File wgs_coverage_interval_list
 
     Boolean provide_bam_output = false
-    Boolean use_gatk3_haplotype_caller = true
+    Boolean use_gatk3_haplotype_caller = false
   }
 
   # Not overridable:
@@ -102,7 +100,6 @@ workflow WholeGenomeGermlineSingleSample {
       duplication_metrics = UnmappedBamToAlignedBam.duplicate_metrics,
       chimerism_metrics = AggregatedBamQC.agg_alignment_summary_metrics,
       base_file_name = sample_and_unmapped_bams.base_file_name,
-      agg_preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
   # QC the sample WGS metrics (stringent thresholds)
@@ -115,7 +112,6 @@ workflow WholeGenomeGermlineSingleSample {
       ref_fasta_index = references.reference_fasta.ref_fasta_index,
       wgs_coverage_interval_list = wgs_coverage_interval_list,
       read_length = read_length,
-      preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
   # QC the sample raw WGS metrics (common thresholds)
@@ -128,7 +124,6 @@ workflow WholeGenomeGermlineSingleSample {
       ref_fasta_index = references.reference_fasta.ref_fasta_index,
       wgs_coverage_interval_list = wgs_coverage_interval_list,
       read_length = read_length,
-      preemptible_tries = papi_settings.agg_preemptible_tries
   }
 
   call ToGvcf.VariantCalling as BamToGvcf {
@@ -147,7 +142,6 @@ workflow WholeGenomeGermlineSingleSample {
       dbsnp_vcf_index = references.dbsnp_vcf_index,
       base_file_name = sample_and_unmapped_bams.base_file_name,
       final_vcf_base_name = final_gvcf_base_name,
-      agg_preemptible_tries = papi_settings.agg_preemptible_tries,
       use_gatk3_haplotype_caller = use_gatk3_haplotype_caller
   }
 
