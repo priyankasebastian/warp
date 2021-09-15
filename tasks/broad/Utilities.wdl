@@ -57,6 +57,7 @@ task CreateSequenceGroupingTSV {
     CODE
   >>>
   runtime {
+    cpu: "2"
     memory: "2 GiB"
   }
   output {
@@ -103,6 +104,7 @@ task ScatterIntervalList {
     Array[File] out = glob("out/*/*.interval_list")
     Int interval_count = read_int(stdout())
   }
+    cpu: "2"
   runtime {
     memory: "2 GiB"
   }
@@ -138,7 +140,7 @@ task ConvertToCram {
   >>>
   runtime {
     memory: "3 GiB"
-    cpu: "1"
+    #cpu: "2"
   }
   output {
     File output_cram = "~{output_basename}.cram"

@@ -106,7 +106,7 @@ task SamToFastqAndBwaMemAndMba {
   >>>
   runtime {
     memory: "14 GiB"
-    cpu: "16"
+    cpu: "8"
   }
   output {
     File output_bam = "~{output_bam_basename}.bam"

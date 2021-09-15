@@ -63,7 +63,7 @@ task HaplotypeCaller_GATK35_GVCF {
   }
   runtime {
     memory: "10 GiB"
-    cpu: "1"
+    cpu: "2"
   }
   output {
     File output_gvcf = "~{gvcf_basename}.vcf.gz"
@@ -149,6 +149,7 @@ task MergeVCFs {
       OUTPUT=~{output_vcf_name}
   }
   runtime {
+    cpu: "2"
     memory: "3 GiB"
   }
   output {

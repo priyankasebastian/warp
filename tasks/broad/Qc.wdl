@@ -29,6 +29,7 @@ task CollectQualityYieldMetrics {
       OUTPUT=~{metrics_filename}
   }
   runtime {
+    cpu: "1"
     memory: "3.5 GiB"
   }
   output {
@@ -62,6 +63,7 @@ task CollectUnsortedReadgroupBamQualityMetrics {
     touch ~{output_bam_prefix}.insert_size_metrics
     touch ~{output_bam_prefix}.insert_size_histogram.pdf
   }
+    cpu: "2"
   runtime {
     memory: "7 GiB"
   }
@@ -109,6 +111,7 @@ task CollectReadgroupBamQualityMetrics {
       ~{true='PROGRAM="CollectGcBiasMetrics"' false="" collect_gc_bias_metrics} \
       METRIC_ACCUMULATION_LEVEL=null \
       METRIC_ACCUMULATION_LEVEL=READ_GROUP
+    cpu: "2"
   }
   runtime {
     memory: "7 GiB"
@@ -158,6 +161,7 @@ task CollectAggregationMetrics {
       ~{true='PROGRAM="CollectGcBiasMetrics"' false="" collect_gc_bias_metrics} \
       METRIC_ACCUMULATION_LEVEL=null \
       METRIC_ACCUMULATION_LEVEL=SAMPLE \
+    cpu: "2"
       METRIC_ACCUMULATION_LEVEL=LIBRARY
   }
   runtime {
@@ -237,6 +241,7 @@ task CrossCheckFingerprints {
       HAPLOTYPE_MAP=~{haplotype_database_file} \
       EXPECT_ALL_GROUPS_TO_MATCH=true \
       INPUT=~{sep=' INPUT=' input_bams} \
+    cpu: "2"
       LOD_THRESHOLD=~{lod_threshold} \
       CROSSCHECK_BY=~{cross_check_by}
   >>>
@@ -276,6 +281,7 @@ task CheckFingerprint {
       DETAIL_OUTPUT=~{detail_metrics_location} \
       GENOTYPES=~{genotypes} \
       HAPLOTYPE_MAP=~{haplotype_database_file} \
+    cpu: "2"
       SAMPLE_ALIAS="~{sample}" \
       IGNORE_READ_GROUPS=true
 
@@ -362,6 +368,7 @@ task ValidateSamFile {
       OUTPUT=~{report_filename} \
       REFERENCE_SEQUENCE=~{ref_fasta} \
       ~{"MAX_OUTPUT=" + max_output} \
+    cpu: "2"
       IGNORE=~{default="null" sep=" IGNORE=" ignore} \
       MODE=VERBOSE \
       ~{default='SKIP_MATE_VALIDATION=false' true='SKIP_MATE_VALIDATION=true' false='SKIP_MATE_VALIDATION=false' is_outlier_data} \
@@ -396,6 +403,7 @@ task CollectWgsMetrics {
       INPUT=~{input_bam} \
       VALIDATION_STRINGENCY=SILENT \
       REFERENCE_SEQUENCE=~{ref_fasta} \
+    cpu: "2"
       INCLUDE_BQ_HISTOGRAM=true \
       INTERVALS=~{wgs_coverage_interval_list} \
       OUTPUT=~{metrics_filename} \
@@ -435,6 +443,7 @@ task CollectRawWgsMetrics {
       CollectRawWgsMetrics \
       INPUT=~{input_bam} \
       VALIDATION_STRINGENCY=SILENT \
+    cpu: "2"
       REFERENCE_SEQUENCE=~{ref_fasta} \
       INCLUDE_BQ_HISTOGRAM=true \
       INTERVALS=~{wgs_coverage_interval_list} \
@@ -503,6 +512,7 @@ task CalculateReadGroupChecksum {
     String read_group_md5_filename
   }
 
+    cpu: "2"
   Int disk_size = ceil(size(input_bam, "GiB")) + 20
 
   command {
@@ -537,6 +547,7 @@ task ValidateVCF {
   Int disk_size = ceil(size(input_vcf, "GiB") + size(dbsnp_vcf, "GiB") + ref_size) + 20
 
   command {
+    cpu: "2"
     gatk --java-options -Xms6000m \
       ValidateVariants \
       -V ~{input_vcf} \
@@ -566,6 +577,7 @@ task CollectVariantCallingMetrics {
 
   Int disk_size = ceil(size(input_vcf, "GiB") + size(dbsnp_vcf, "GiB")) + 20
 
+    cpu: "2"
   command {
     java -Xms2000m -jar /usr/picard/picard.jar \
       CollectVariantCallingMetrics \
