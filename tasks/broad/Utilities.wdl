@@ -79,7 +79,7 @@ task ScatterIntervalList {
   command <<<
     set -e
     mkdir out
-    java -Xms1g -Xmx2g -jar /usr/gitc/picard.jar \
+    java -Xms1g -Xmx2g -jar /mnt/lustre/genomics/tools/picard.jar \
       IntervalListTools \
       SCATTER_COUNT=~{scatter_count} \
       SUBDIVISION_MODE=BALANCING_WITHOUT_INTERVAL_SUBDIVISION_WITH_OVERFLOW \
@@ -127,16 +127,16 @@ task ConvertToCram {
     set -e
     set -o pipefail
 
-    samtools view -C -T ~{ref_fasta} ~{input_bam} | \
+    /mnt/lustre/genomics/tools/samtools-1.9/samtools view -C -T ~{ref_fasta} ~{input_bam} | \
     tee ~{output_basename}.cram | \
     md5sum | awk '{print $1}' > ~{output_basename}.cram.md5
 
     # Create REF_CACHE. Used when indexing a CRAM
-    seq_cache_populate.pl -root ./ref/cache ~{ref_fasta}
+    /mnt/lustre/genomics/tools/samtools-1.9/misc/seq_cache_populate.pl -root ./ref/cache ~{ref_fasta}
     export REF_PATH=:
     export REF_CACHE=./ref/cache/%2s/%2s/%s
 
-    samtools index ~{output_basename}.cram
+    /mnt/lustre/genomics/tools/samtools-1.9/samtools index ~{output_basename}.cram
   >>>
   runtime {
     memory: "3 GiB"
@@ -162,9 +162,9 @@ task ConvertToBam {
     set -e
     set -o pipefail
 
-    samtools view -b -o ~{output_basename}.bam -T ~{ref_fasta} ~{input_cram}
+    /mnt/lustre/genomics/tools/samtools-1.9/samtools view -b -o ~{output_basename}.bam -T ~{ref_fasta} ~{input_cram}
 
-    samtools index ~{output_basename}.bam
+    /mnt/lustre/genomics/tools/samtools-1.9/samtools index ~{output_basename}.bam
   >>>
   runtime {
     memory: "3 GiB"
