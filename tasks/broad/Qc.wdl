@@ -63,9 +63,9 @@ task CollectUnsortedReadgroupBamQualityMetrics {
     touch ~{output_bam_prefix}.insert_size_metrics
     touch ~{output_bam_prefix}.insert_size_histogram.pdf
   }
-    cpu: "2"
   runtime {
     memory: "7 GiB"
+    cpu: "2"
   }
   output {
     File base_distribution_by_cycle_pdf = "~{output_bam_prefix}.base_distribution_by_cycle.pdf"
@@ -111,9 +111,9 @@ task CollectReadgroupBamQualityMetrics {
       ~{true='PROGRAM="CollectGcBiasMetrics"' false="" collect_gc_bias_metrics} \
       METRIC_ACCUMULATION_LEVEL=null \
       METRIC_ACCUMULATION_LEVEL=READ_GROUP
-    cpu: "2"
   }
   runtime {
+    cpu: "2"
     memory: "7 GiB"
   }
   output {
@@ -161,10 +161,10 @@ task CollectAggregationMetrics {
       ~{true='PROGRAM="CollectGcBiasMetrics"' false="" collect_gc_bias_metrics} \
       METRIC_ACCUMULATION_LEVEL=null \
       METRIC_ACCUMULATION_LEVEL=SAMPLE \
-    cpu: "2"
       METRIC_ACCUMULATION_LEVEL=LIBRARY
   }
   runtime {
+    cpu: "2"
     memory: "7 GiB"
   }
   output {
@@ -241,11 +241,11 @@ task CrossCheckFingerprints {
       HAPLOTYPE_MAP=~{haplotype_database_file} \
       EXPECT_ALL_GROUPS_TO_MATCH=true \
       INPUT=~{sep=' INPUT=' input_bams} \
-    cpu: "2"
       LOD_THRESHOLD=~{lod_threshold} \
       CROSSCHECK_BY=~{cross_check_by}
   >>>
   runtime {
+    cpu: "2"
     memory: "3.5 GiB"
   }
   output {
@@ -281,12 +281,12 @@ task CheckFingerprint {
       DETAIL_OUTPUT=~{detail_metrics_location} \
       GENOTYPES=~{genotypes} \
       HAPLOTYPE_MAP=~{haplotype_database_file} \
-    cpu: "2"
       SAMPLE_ALIAS="~{sample}" \
       IGNORE_READ_GROUPS=true
 
   >>>
   runtime {
+    cpu: "2"
     memory: "3.5 GiB"
   }
   output {
@@ -368,13 +368,13 @@ task ValidateSamFile {
       OUTPUT=~{report_filename} \
       REFERENCE_SEQUENCE=~{ref_fasta} \
       ~{"MAX_OUTPUT=" + max_output} \
-    cpu: "2"
       IGNORE=~{default="null" sep=" IGNORE=" ignore} \
       MODE=VERBOSE \
       ~{default='SKIP_MATE_VALIDATION=false' true='SKIP_MATE_VALIDATION=true' false='SKIP_MATE_VALIDATION=false' is_outlier_data} \
       IS_BISULFITE_SEQUENCED=false
   }
   runtime {
+    cpu: "2"
     memory: "~{memory_size} GiB"
   }
   output {
@@ -403,7 +403,6 @@ task CollectWgsMetrics {
       INPUT=~{input_bam} \
       VALIDATION_STRINGENCY=SILENT \
       REFERENCE_SEQUENCE=~{ref_fasta} \
-    cpu: "2"
       INCLUDE_BQ_HISTOGRAM=true \
       INTERVALS=~{wgs_coverage_interval_list} \
       OUTPUT=~{metrics_filename} \
@@ -412,6 +411,7 @@ task CollectWgsMetrics {
   }
   runtime {
     memory: "3 GiB"
+    cpu: "2"
   }
   output {
     File metrics = "~{metrics_filename}"
@@ -443,7 +443,6 @@ task CollectRawWgsMetrics {
       CollectRawWgsMetrics \
       INPUT=~{input_bam} \
       VALIDATION_STRINGENCY=SILENT \
-    cpu: "2"
       REFERENCE_SEQUENCE=~{ref_fasta} \
       INCLUDE_BQ_HISTOGRAM=true \
       INTERVALS=~{wgs_coverage_interval_list} \
@@ -512,7 +511,6 @@ task CalculateReadGroupChecksum {
     String read_group_md5_filename
   }
 
-    cpu: "2"
   Int disk_size = ceil(size(input_bam, "GiB")) + 20
 
   command {
@@ -523,6 +521,7 @@ task CalculateReadGroupChecksum {
   }
   runtime {
     memory: "2 GiB"
+    cpu: "2"
   }
   output {
     File md5_file = "~{read_group_md5_filename}"
@@ -547,7 +546,6 @@ task ValidateVCF {
   Int disk_size = ceil(size(input_vcf, "GiB") + size(dbsnp_vcf, "GiB") + ref_size) + 20
 
   command {
-    cpu: "2"
     /mnt/lustre/genomics/tools/gatk-4.2.1.0/gatk --java-options -Xms6000m -Xmx6900m \
       ValidateVariants \
       -V ~{input_vcf} \
@@ -558,6 +556,7 @@ task ValidateVCF {
       --dbsnp ~{dbsnp_vcf}
   }
   runtime {
+    cpu: "2"
     memory: "7 GiB"
   }
 }
@@ -577,7 +576,6 @@ task CollectVariantCallingMetrics {
 
   Int disk_size = ceil(size(input_vcf, "GiB") + size(dbsnp_vcf, "GiB")) + 20
 
-    cpu: "2"
   command {
     java -Xms2000m -Xmx2900m -jar /mnt/lustre/genomics/tools/picard.jar \
       CollectVariantCallingMetrics \
@@ -590,6 +588,7 @@ task CollectVariantCallingMetrics {
   }
   runtime {
     memory: "3 GiB"
+    cpu: "2"
   }
   output {
     File summary_metrics = "~{metrics_basename}.variant_calling_summary_metrics"
