@@ -5,11 +5,14 @@ version 1.0
 ## This WDL defines tasks used for QC of human whole-genome or exome sequencing data.
 ##
 ## Runtime parameters are often optimized for Broad's Google Cloud Platform implementation.
+## For program versions, see docker containers.
 ##
 ## LICENSING :
 ## This script is released under the WDL source code license (BSD-3) (see LICENSE in
 ## https://github.com/broadinstitute/wdl). Note however that the programs it calls may
 ## be subject to different licenses. Users are responsible for checking that they are
+## authorized to run all programs before running this script. Please see the docker
+## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
 # Collect sequencing yield quality metrics
@@ -546,7 +549,7 @@ task ValidateVCF {
   Int disk_size = ceil(size(input_vcf, "GiB") + size(dbsnp_vcf, "GiB") + ref_size) + 20
 
   command {
-    /mnt/lustre/genomics/tools/gatk-4.2.1.0/gatk --java-options -Xms6000m -Xmx6900m \
+    /mnt/lustre/genomics/tools/gatk-4.2.1.0/gatk --java-options "-Xms6000m -Xmx6900m" \
       ValidateVariants \
       -V ~{input_vcf} \
       -R ~{ref_fasta} \
