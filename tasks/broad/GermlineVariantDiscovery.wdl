@@ -25,7 +25,6 @@ task HaplotypeCaller_GATK35_GVCF {
     File ref_fasta
     File ref_fasta_index
     Float? contamination
-    Int preemptible_tries
     Int hc_scatter
   }
 
@@ -66,11 +65,8 @@ task HaplotypeCaller_GATK35_GVCF {
       --read_filter OverclippedRead
   }
   runtime {
-    docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.7-1603303710"
-    preemptible: preemptible_tries
     memory: "10 GiB"
     cpu: "1"
-    disks: "local-disk " + disk_size + " HDD"
   }
   output {
     File output_gvcf = "~{gvcf_basename}.vcf.gz"
@@ -90,9 +86,7 @@ task HaplotypeCaller_GATK4_VCF {
     Float? contamination
     Boolean make_gvcf
     Boolean make_bamout
-    Int preemptible_tries
     Int hc_scatter
-    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.8.0"
   }
 
   String output_suffix = if make_gvcf then ".g.vcf.gz" else ".vcf.gz"
@@ -128,12 +122,8 @@ task HaplotypeCaller_GATK4_VCF {
   >>>
 
   runtime {
-    docker: gatk_docker
-    preemptible: preemptible_tries
     memory: "6.5 GiB"
     cpu: "2"
-    bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
   }
 
   output {
@@ -149,7 +139,6 @@ task MergeVCFs {
     Array[File] input_vcfs
     Array[File] input_vcfs_indexes
     String output_vcf_name
-    Int preemptible_tries
   }
 
   Int disk_size = ceil(size(input_vcfs, "GiB") * 2.5) + 10
@@ -163,10 +152,7 @@ task MergeVCFs {
       OUTPUT=~{output_vcf_name}
   }
   runtime {
-    docker: "us.gcr.io/broad-gotc-prod/picard-cloud:2.23.8"
-    preemptible: preemptible_tries
     memory: "3 GiB"
-    disks: "local-disk ~{disk_size} HDD"
   }
   output {
     File output_vcf = "~{output_vcf_name}"
@@ -180,8 +166,6 @@ task HardFilterVcf {
     File input_vcf_index
     String vcf_basename
     File interval_list
-    Int preemptible_tries
-    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.8.0"
   }
 
   Int disk_size = ceil(2 * size(input_vcf, "GiB")) + 20
@@ -201,11 +185,7 @@ task HardFilterVcf {
     File output_vcf_index = "~{output_vcf_name}.tbi"
   }
   runtime {
-    docker: gatk_docker
-    preemptible: preemptible_tries
     memory: "3 GiB"
-    bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
   }
 }
 
@@ -219,8 +199,6 @@ task CNNScoreVariants {
     File ref_fasta
     File ref_fasta_index
     File ref_dict
-    Int preemptible_tries
-    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.8.0"
   }
 
   Int disk_size = ceil(size(bamout, "GiB") + size(ref_fasta, "GiB") + (size(input_vcf, "GiB") * 2))
@@ -250,12 +228,8 @@ task CNNScoreVariants {
   }
 
   runtime {
-    docker: gatk_docker
-    preemptible: preemptible_tries
     memory: "15 GiB"
     cpu: "2"
-    bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
   }
 }
 
@@ -276,8 +250,6 @@ task FilterVariantTranches {
     File dbsnp_resource_vcf
     File dbsnp_resource_vcf_index
     String info_key
-    Int preemptible_tries
-    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.8.0"
   }
 
   Int disk_size = ceil(size(hapmap_resource_vcf, "GiB") +
@@ -310,9 +282,5 @@ task FilterVariantTranches {
   runtime {
     memory: "7 GiB"
     cpu: "2"
-    bootDiskSizeGb: 15
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: preemptible_tries
-    docker: gatk_docker
   }
 }
