@@ -124,6 +124,7 @@ task HaplotypeCaller_GATK4_VCF {
   runtime {
     memory: "6.5 GiB"
     cpu: "2"
+    backend: "SLURM-HAPLO"
   }
 
   output {
