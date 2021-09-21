@@ -41,6 +41,7 @@ workflow WholeGenomeGermlineSingleSample {
   String pipeline_version = "2.3.3"
 
   input {
+    String tool_path = "/mnt/lustre/genomics/tools"
     SampleAndUnmappedBams sample_and_unmapped_bams
     DNASeqSingleSampleReferences references
     VariantCallingScatterSettings scatter_settings

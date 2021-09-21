@@ -46,7 +46,7 @@ task SamToFastqAndBwaMemAndMba {
 
     # This is done before "set -o pipefail" because "bwa" will have a rc=1 and we don't want to allow rc=1 to succeed
     # because the sed may also fail with that error and that is something we actually want to fail on.
-    BWA_VERSION=$(/usr/gitc/bwa 2>&1 | \
+    BWA_VERSION=$(${tool_path}/bwa/bwa 2>&1 | \
     grep -e '^Version' | \
     sed 's/Version: //')
 
@@ -61,14 +61,14 @@ task SamToFastqAndBwaMemAndMba {
     bash_ref_fasta=~{reference_fasta.ref_fasta}
     # if reference_fasta.ref_alt has data in it,
     if [ -s ~{reference_fasta.ref_alt} ]; then
-      java -Xms1000m -Xmx1000m -jar /usr/gitc/picard.jar \
+      java -Xms1000m -Xmx1000m -jar ${tool_path}/picard.jar \
         SamToFastq \
         INPUT=~{input_bam} \
         FASTQ=/dev/stdout \
         INTERLEAVE=true \
         NON_PF=true | \
-      /usr/gitc/~{bwa_commandline} /dev/stdin - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2) | \
-      java -Dsamjdk.compression_level=~{compression_level} -Xms1000m -Xmx1000m -jar /usr/gitc/picard.jar \
+      ${tool_path}/bwa/~{bwa_commandline} /dev/stdin - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2) | \
+      java -Dsamjdk.compression_level=~{compression_level} -Xms1000m -Xmx1000m -jar ${tool_path}/picard.jar \
         MergeBamAlignment \
         VALIDATION_STRINGENCY=SILENT \
         EXPECTED_ORIENTATIONS=FR \
@@ -133,9 +133,9 @@ task SamSplitter {
     set -e
     mkdir output_dir
 
-    total_reads=$(samtools view -c ~{input_bam})
+    total_reads=$(${tool_path}/samtools/samtools view -c ~{input_bam})
 
-    java -Dsamjdk.compression_level=~{compression_level} -Xms3000m -Xmx3600m -jar /usr/gitc/picard.jar SplitSamByNumberOfReads \
+    java -Dsamjdk.compression_level=~{compression_level} -Xms3000m -Xmx3600m -jar ${tool_path}/picard.jar SplitSamByNumberOfReads \
       INPUT=~{input_bam} \
       OUTPUT=output_dir \
       SPLIT_TO_N_READS=~{n_reads} \

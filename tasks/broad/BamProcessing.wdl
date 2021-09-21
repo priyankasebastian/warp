@@ -28,7 +28,7 @@ task SortSam {
   Int disk_size = ceil(sort_sam_disk_multiplier * size(input_bam, "GiB")) + 20
 
   command {
-    java -Dsamjdk.compression_level=~{compression_level} -Xms4000m -jar /usr/picard/picard.jar \
+    java -Dsamjdk.compression_level=~{compression_level} -Xms4000m -jar ${tool_path}/picard.jar \
       SortSam \
       INPUT=~{input_bam} \
       OUTPUT=~{output_bam_basename}.bam \
@@ -64,13 +64,13 @@ task SortSamSpark {
   command {
     set -e
 
-    gatk --java-options "-Dsamjdk.compression_level=~{compression_level} -Xms100g -Xmx100g" \
+    ${tool_path}/gatk/gatk --java-options "-Dsamjdk.compression_level=~{compression_level} -Xms100g -Xmx100g" \
       SortSamSpark \
       -I ~{input_bam} \
       -O ~{output_bam_basename}.bam \
       -- --conf spark.local.dir=. --spark-master 'local[16]' --conf 'spark.kryo.referenceTracking=false'
 
-    samtools index ~{output_bam_basename}.bam ~{output_bam_basename}.bai
+    ${tool_path}/samtools/samtools index ~{output_bam_basename}.bam ~{output_bam_basename}.bai
   }
   runtime {
     cpu: "16"
@@ -114,7 +114,7 @@ task MarkDuplicates {
   # While query-grouped isn't actually query-sorted, it's good enough for MarkDuplicates with ASSUME_SORT_ORDER="queryname"
 
   command {
-    java -Dsamjdk.compression_level=~{compression_level} -Xms~{java_memory_size}g -jar /usr/picard/picard.jar \
+    java -Dsamjdk.compression_level=~{compression_level} -Xms~{java_memory_size}g -jar ${tool_path}/picard.jar \
       MarkDuplicates \
       INPUT=~{sep=' INPUT=' input_bams} \
       OUTPUT=~{output_bam_basename}.bam \
@@ -164,8 +164,8 @@ task MarkDuplicatesSpark {
   # MarkDuplicatesSpark requires PAPIv2
   command <<<
     set -e
-    export GATK_LOCAL_JAR=/root/gatk.jar
-    gatk --java-options "-Dsamjdk.compression_level=~{compression_level} -Xmx~{java_memory_size}g" \
+    export GATK_LOCAL_JAR=${tool_path}/gatk/gatk-package-4.2.1.0-local.jar
+    ${tool_path}/gatk/gatk --java-options "-Dsamjdk.compression_level=~{compression_level} -Xmx~{java_memory_size}g" \
       MarkDuplicatesSpark \
       --input ~{sep=' --input ' input_bams} \
       --output ~{output_bam_location} \
@@ -217,7 +217,7 @@ task BaseRecalibrator {
   }
 
   command {
-    gatk --java-options "-XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10 -XX:+PrintFlagsFinal \
+    ${tool_path}/gatk/gatk --java-options "-XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10 -XX:+PrintFlagsFinal \
       -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintGCDetails \
       -Xloggc:gc_log.log -Xms5g" \
       BaseRecalibrator \
@@ -270,7 +270,7 @@ task ApplyBQSR {
   }
 
   command {
-    gatk --java-options "-XX:+PrintFlagsFinal -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps \
+    ${tool_path}/gatk/gatk --java-options "-XX:+PrintFlagsFinal -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps \
       -XX:+PrintGCDetails -Xloggc:gc_log.log \
       -XX:GCTimeLimit=50 -XX:GCHeapFreeLimit=10 -Dsamjdk.compression_level=~{compression_level} -Xms3000m" \
       ApplyBQSR \
@@ -305,7 +305,7 @@ task GatherBqsrReports {
   }
 
   command {
-    gatk --java-options "-Xms3000m" \
+    ${tool_path}/gatk/gatk --java-options "-Xms3000m" \
       GatherBQSRReports \
       -I ~{sep=' -I ' input_bqsr_reports} \
       -O ~{output_report_filename}
@@ -331,7 +331,7 @@ task GatherSortedBamFiles {
   Int disk_size = ceil(2 * total_input_size) + 20
 
   command {
-    java -Dsamjdk.compression_level=~{compression_level} -Xms2000m -jar /usr/picard/picard.jar \
+    java -Dsamjdk.compression_level=~{compression_level} -Xms2000m -jar ${tool_path}/picard.jar \
       GatherBamFiles \
       INPUT=~{sep=' INPUT=' input_bams} \
       OUTPUT=~{output_bam_basename}.bam \
@@ -362,7 +362,7 @@ task GatherUnsortedBamFiles {
   Int disk_size = ceil(2 * total_input_size) + 20
 
   command {
-    java -Dsamjdk.compression_level=~{compression_level} -Xms2000m -jar /usr/picard/picard.jar \
+    java -Dsamjdk.compression_level=~{compression_level} -Xms2000m -jar ${tool_path}/picard.jar \
       GatherBamFiles \
       INPUT=~{sep=' INPUT=' input_bams} \
       OUTPUT=~{output_bam_basename}.bam \
@@ -459,7 +459,7 @@ task CheckContamination {
 
     # creates a ~{output_prefix}.selfSM file, a TSV file with 2 rows, 19 columns.
     # First row are the keys (e.g., SEQ_SM, RG, FREEMIX), second row are the associated values
-    /usr/gitc/VerifyBamID \
+    ${tool_path}/VerifyBamID/bin/VerifyBamID  \
     --Verbose \
     --NumPC 4 \
     --Output ~{output_prefix} \

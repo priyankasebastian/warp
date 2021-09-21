@@ -167,8 +167,8 @@ task MergeBamouts {
   Int disk_size = ceil(size(bams, "GiB") * 2) + 10
 
   command {
-    samtools merge ~{output_base_name}.bam ~{sep=" " bams}
-    samtools index ~{output_base_name}.bam
+    ${tool_path}/samtools/samtools merge ~{output_base_name}.bam ~{sep=" " bams}
+    ${tool_path}/samtools/samtools index ~{output_base_name}.bam
     mv ~{output_base_name}.bam.bai ~{output_base_name}.bai
   }
 
