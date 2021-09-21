@@ -109,7 +109,7 @@ task SamToFastqAndBwaMemAndMba {
   >>>
   runtime {
     memory: "14 GiB"
-    cpu: "16"
+    cpu: "8"
     backend: "SLURM-BWA"
   }
   output {

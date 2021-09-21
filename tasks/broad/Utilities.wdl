@@ -61,6 +61,7 @@ task CreateSequenceGroupingTSV {
   >>>
   runtime {
     memory: "2 GiB"
+    cpu: "2"
   }
   output {
     Array[Array[String]] sequence_grouping = read_tsv("sequence_grouping.txt")
@@ -108,6 +109,7 @@ task ScatterIntervalList {
   }
   runtime {
     memory: "2 GiB"
+    cpu: "2"
   }
 }
 
@@ -141,7 +143,6 @@ task ConvertToCram {
   >>>
   runtime {
     memory: "3 GiB"
-    cpu: "1"
   }
   output {
     File output_cram = "~{output_basename}.cram"

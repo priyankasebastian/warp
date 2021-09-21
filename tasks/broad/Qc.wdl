@@ -33,6 +33,7 @@ task CollectQualityYieldMetrics {
   }
   runtime {
     memory: "3.5 GiB"
+    cpu: "1"
   }
   output {
     File quality_yield_metrics = "~{metrics_filename}"
@@ -67,6 +68,7 @@ task CollectUnsortedReadgroupBamQualityMetrics {
   }
   runtime {
     memory: "7 GiB"
+    cpu: "2"
   }
   output {
     File base_distribution_by_cycle_pdf = "~{output_bam_prefix}.base_distribution_by_cycle.pdf"
@@ -115,6 +117,7 @@ task CollectReadgroupBamQualityMetrics {
   }
   runtime {
     memory: "7 GiB"
+    cpu: "2"
   }
   output {
     File alignment_summary_metrics = "~{output_bam_prefix}.alignment_summary_metrics"
@@ -165,6 +168,7 @@ task CollectAggregationMetrics {
   }
   runtime {
     memory: "7 GiB"
+    cpu: "2"
   }
   output {
     File alignment_summary_metrics = "~{output_bam_prefix}.alignment_summary_metrics"
@@ -245,6 +249,7 @@ task CrossCheckFingerprints {
   >>>
   runtime {
     memory: "3.5 GiB"
+    cpu: "2"
   }
   output {
     File cross_check_fingerprints_metrics = "~{metrics_filename}"
@@ -285,6 +290,7 @@ task CheckFingerprint {
   >>>
   runtime {
     memory: "3.5 GiB"
+    cpu: "2"
   }
   output {
     File summary_metrics = summary_metrics_location
@@ -372,6 +378,7 @@ task ValidateSamFile {
   }
   runtime {
     memory: "~{memory_size} GiB"
+    cpu: "2"
   }
   output {
     File report = "~{report_filename}"
@@ -407,6 +414,7 @@ task CollectWgsMetrics {
   }
   runtime {
     memory: "3 GiB"
+    cpu: "2"
   }
   output {
     File metrics = "~{metrics_filename}"
@@ -516,6 +524,7 @@ task CalculateReadGroupChecksum {
   }
   runtime {
     memory: "2 GiB"
+    cpu: "2"
   }
   output {
     File md5_file = "~{read_group_md5_filename}"
@@ -551,6 +560,7 @@ task ValidateVCF {
   }
   runtime {
     memory: "7 GiB"
+    cpu: "2"
   }
 }
 
@@ -581,6 +591,7 @@ task CollectVariantCallingMetrics {
   }
   runtime {
     memory: "3 GiB"
+    cpu: "2"
   }
   output {
     File summary_metrics = "~{metrics_basename}.variant_calling_summary_metrics"
