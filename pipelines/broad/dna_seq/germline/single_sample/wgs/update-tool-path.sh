@@ -11,7 +11,7 @@ sed -i  's|/usr/gitc/picard.jar|/mnt/lustre/genomics/tools/picard.jar|g' *.wdl
 
 echo "updating tool path for gatk"
 sed -i 's|gatk --java|/mnt/lustre/genomics/tools/gatk-4.1.9.0/gatk --java|g' *.wdl
-sed -i 's|/root/gatk.jar|/mnt/lustre/genomics/tools/gatk-4.1.9.0/gatk-package-4.1.9.0-local.jar --java|g' *.wdl
+sed -i 's|/root/gatk.jar|/mnt/lustre/genomics/tools/gatk-4.1.9.0/gatk-package-4.1.9.0-local.jar|g' *.wdl
 
 
 echo "updating tool path for samtools"
