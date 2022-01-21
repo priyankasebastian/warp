@@ -1,9 +1,12 @@
 #!/bin/bash
 
-####### this bash script file updates the tool paths for onprem runs ############
+####### commenting out docker parameter from the runtime block in the wdls to get the wdl run on bare metal setup outside containers #######
+sed -i 's|docker:|#docker:|g' *.wdl
+
+####### script below updates the tool paths for bare metal setup #######
 
 echo "changing picard tool path"
-#Picard 2.16.0 is used.
+#Picard 2.23.8 is used.
 sed -i  's|/usr/picard/picard.jar|/mnt/lustre/genomics/tools/picard.jar|g' *.wdl
 sed -i  's|/usr/gitc/picard-private.jar|/mnt/lustre/genomics/tools/picard.jar|g' *.wdl
 sed -i  's|/usr/gitc/picard.jar|/mnt/lustre/genomics/tools/picard.jar|g' *.wdl
